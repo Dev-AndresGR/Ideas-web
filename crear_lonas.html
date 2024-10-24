@@ -1,0 +1,258 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <!-- Meta Tags -->
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cotización de Lonas - Ideas Estudio de Marketing</title>
+
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
+
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/css/bootstrap.min.css" rel="stylesheet">
+
+    <!-- Estilos Personalizados -->
+    <style>
+        body {
+            font-family: 'Roboto', sans-serif;
+            background-color: #fbfce2;
+            color: #333;
+            padding: 20px;
+        }
+
+        .hero-section {
+            background-color: #f0c620;
+            color: rgb(5, 5, 5);
+            padding: 80px;
+            text-align: center;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        .container h2 {
+            margin-top: 30px;
+            font-size: 2rem;
+            color: #000000;
+        }
+
+        .btn-primary {
+            background-color: #ecc010;
+            border: none;
+        }
+
+        .btn-primary:hover {
+            background-color: #0056b3;
+        }
+
+        .logo {
+            max-width: 150px;
+            height: auto;
+            margin: 0 auto;
+            display: block;
+        }
+
+        .range-label {
+            font-size: 1.2rem;
+            margin-top: 15px;
+            color: #555;
+        }
+
+        /* Estilos del rectángulo que representa la lona */
+        .lona-visual {
+            background-color: #ececec;
+            border: 2px solid #333;
+            margin: 20px auto;
+            position: relative;
+            transition: width 0.3s, height 0.3s;
+        }
+
+        /* Estilos para los ojetes (círculos) */
+        .ojete {
+            width: 15px;
+            height: 15px;
+            background-color: black;
+            border-radius: 50%;
+            position: absolute;
+        }
+
+        .ojete::after {
+            content: '';
+            width: 5px;
+            height: 5px;
+            background-color: transparent;
+            border: 2px solid white; /* Color del aro interior */
+            border-radius: 50%;
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+        }
+
+        .lona-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .lona-size {
+            font-size: 1rem;
+            color: #333;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Hero Section -->
+    <section class="hero-section"> 
+        <img src="C:\Users\Andres Garita\OneDrive\Escritorio\Página ideas\imagenes\logo ideas publicidad.png" class="logo" alt="Logo de Ideas Estudio de Marketing">
+        <p>Por favor, complete el siguiente formulario para solicitar su cotización.</p>
+    </section>
+
+    <!-- Formulario de Cotización -->
+    <section class="container mt-5">
+        <h2>¿Cómo te gustaría tu lona?</h2>
+        <form>
+            <div class="mb-3">
+                <label for="nombreEmpresa" class="form-label">Nombre de la Empresa</label>
+                <input type="text" class="form-control" id="nombreEmpresa" required>
+            </div>
+
+            <!-- Slider para seleccionar el largo de la lona -->
+            <div class="mb-3">
+                <label for="largoLona" class="form-label">Largo de la Lona (en metros)</label>
+                <input type="range" class="form-range" id="largoLona" min="1" max="1.8" step="0.01" value="1.5" oninput="updateLonaSize()">
+                <span class="range-label">Largo seleccionado: <span id="largoValue">1.5</span> metros</span>
+            </div>
+
+            <!-- Slider para seleccionar el ancho de la lona -->
+            <div class="mb-3">
+                <label for="anchoLona" class="form-label">Ancho de la Lona (en metros)</label>
+                <input type="range" class="form-range" id="anchoLona" min="2" max="7" step="0.1" value="4" oninput="updateLonaSize()">
+                <span class="range-label">Ancho seleccionado: <span id="anchoValue">4</span> metros</span>
+            </div>
+
+            <!-- Rectángulo que representa la lona -->
+            <div class="lona-container">
+                <div class="lona-visual" id="lonaVisual"></div>
+                <div class="lona-size">Dimensiones de la lona: <span id="dimensionesLona">1.5m x 4m</span></div>
+            </div>
+
+            <!-- Opción para seleccionar 'Sí' o 'No' para Ruedo usando radio buttons -->
+            <div class="mb-3">
+                <label class="form-label">¿Lleva Ruedo?</label>
+                <div>
+                    <input type="radio" id="ruedoSi" name="ruedo" value="si" required>
+                    <label for="ruedoSi">Sí</label>
+
+                    <input type="radio" id="ruedoNo" name="ruedo" value="no" required>
+                    <label for="ruedoNo">No</label>
+                </div>
+            </div>
+
+            <!-- Opción para seleccionar 'Sí' o 'No' para Ojetes usando radio buttons -->
+            <div class="mb-3">
+                <label class="form-label">¿Lleva Ojetes?</label>
+                <div>
+                    <input type="radio" id="ojetesSi" name="ojetes" value="si" required onclick="toggleOjetes(true)">
+                    <label for="ojetesSi">Sí</label>
+
+                    <input type="radio" id="ojetesNo" name="ojetes" value="no" required onclick="toggleOjetes(false)">
+                    <label for="ojetesNo">No</label>
+                </div>
+            </div>
+
+            <div class="mb-3">
+                <label for="archivoDiseno" class="form-label">Subir Archivo de Diseño (PDF, PNG, JPG)</label>
+                <input type="file" class="form-control" id="archivoDiseno" accept=".pdf,.png,.jpg" required>
+            </div>
+
+            <!-- Sección para mostrar el precio -->
+            <div class="mb-3">
+                <label for="precioLona" class="form-label">Precio de la Lona: ₡<span id="precioLona">6000</span></label>
+            </div>
+
+            <button type="submit" class="btn btn-primary">Enviar Cotización</button>
+        </form>
+    </section>
+
+    <!-- Bootstrap JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/js/bootstrap.bundle.min.js"></script>
+
+    <!-- Script para actualizar el tamaño de la lona -->
+    <script>
+        function updateLonaSize() {
+            // Obtener valores del largo y ancho
+            var largo = document.getElementById('largoLona').value;
+            var ancho = document.getElementById('anchoLona').value;
+
+            // Mostrar los valores seleccionados
+            document.getElementById('largoValue').textContent = largo;
+            document.getElementById('anchoValue').textContent = ancho;
+
+            // Actualizar el tamaño visual del rectángulo (escalado)
+            var lonaVisual = document.getElementById('lonaVisual');
+            var largoPx = (largo * 150);  // Escalamos para representar en pantalla
+            var anchoPx = (ancho * 100);  // Escalamos para representar en pantalla
+            lonaVisual.style.width = anchoPx + 'px';
+            lonaVisual.style.height = largoPx + 'px';
+
+            // Actualizar las dimensiones en la vista
+            document.getElementById('dimensionesLona').textContent = largo + 'm x ' + ancho + 'm';
+
+            // Calcular el precio de la lona
+            calcularPrecio(largo, ancho);
+        }
+
+        function toggleOjetes(showOjetes) {
+            const lonaVisual = document.getElementById('lonaVisual');
+            lonaVisual.innerHTML = ''; // Limpiar los ojetes previos
+
+            if (showOjetes) {
+                const width = lonaVisual.clientWidth;
+                const height = lonaVisual.clientHeight;
+
+                // Crear ojetes en las esquinas y en el centro superior
+                const positions = [
+                    { top: '0', left: '0' }, // Superior Izquierda
+                    { top: '0', left: 'calc(100% - 15px)' }, // Superior Derecha
+                    { top: 'calc(100% - 15px)', left: '0' }, // Inferior Izquierda
+                    { top: 'calc(100% - 15px)', left: 'calc(100% - 15px)' }, // Inferior Derecha
+                    { top: '0', left: 'calc(50% - 7.5px)' }, // Centro Superior
+                ];
+
+                positions.forEach(pos => {
+                    const ojetesDiv = document.createElement('div');
+                    ojetesDiv.className = 'ojete';
+                    ojetesDiv.style.top = pos.top;
+                    ojetesDiv.style.left = pos.left;
+                    lonaVisual.appendChild(ojetesDiv);
+                });
+            }
+        }
+
+        function calcularPrecio(largo, ancho) {
+            // Precio base por metro cuadrado
+            const basePrice = 6000; 
+            const extraPricePerSquareMeter = 1000; 
+
+            // Cálculo de precio
+            const area = largo * ancho; 
+            let precioFinal = basePrice; 
+
+            // Aumento de precio por área adicional
+            if (area > 3) {
+                const extraArea = area - 3;
+                precioFinal += extraArea * extraPricePerSquareMeter; 
+            }
+
+            // Mostrar el precio en el HTML
+            document.getElementById('precioLona').textContent = precioFinal;
+        }
+
+        // Inicializa el tamaño de la lona al cargar
+        document.addEventListener('DOMContentLoaded', updateLonaSize);
+    </script>
+</body>
+</html>
+
